@@ -5,6 +5,7 @@ interface PublicRouteProps {
 }
 const PublicRoute = ({ children }: PublicRouteProps) => {
   const { user } = useAuth();
+
   if (user) {
     return <Navigate to={"/"} replace={true} />;
   }
