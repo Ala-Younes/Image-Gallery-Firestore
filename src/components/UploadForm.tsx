@@ -3,11 +3,24 @@ import useStorage from "../hooks/useStorage";
 
 const UploadForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedSrc, setSelectedSrc] = useState<string | null>(null);
 
-  const { startUpload, progress } = useStorage();
+  const { uploadAndAddToFirestore, progress } = useStorage();
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+    const files = e.target.files;
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    const targetFile = files[0];
+    const fileType = targetFile?.type.split("/")[1];
+
+    if (fileType?.includes("jpeg")) {
+      setSelectedFile(targetFile);
+      setSelectedSrc(URL.createObjectURL(targetFile));
+    } else {
+      console.error("File Type not supported");
     }
   };
 
@@ -15,8 +28,7 @@ const UploadForm = () => {
     e.preventDefault();
     if (selectedFile) {
       // Upload Image
-      startUpload(selectedFile);
-      console.log(selectedFile);
+      uploadAndAddToFirestore(selectedFile);
     } else {
       setSelectedFile(null);
     }
@@ -32,6 +44,8 @@ const UploadForm = () => {
           className="file-input file-input-bordered w-full max-w-xs"
           onChange={handleFileChange}
         />
+
+        {selectedSrc && <img className="h-36 w-36" src={selectedSrc} alt="" />}
         <button
           type="submit"
           className={`btn btn-neutral ${progress && "loading"}`}

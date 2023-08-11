@@ -1,14 +1,25 @@
-import { query, collection, onSnapshot, orderBy } from "firebase/firestore";
+import {
+  query,
+  collection,
+  onSnapshot,
+  orderBy,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase/config";
+import { useAuth } from "./useAuth";
 type Image = {
   createdAt: Date;
   userEmail: string;
   imageUrl: string;
+  imageId: string;
 };
 const useFirestore = (collectionName: string) => {
   const [docs, setDocs] = useState<Image[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     let unsubscribe: () => void;
@@ -25,7 +36,8 @@ const useFirestore = (collectionName: string) => {
             const imageUrl = doc.data().imageUrl;
             const createdAt = doc.data().createdAt.toDate();
             const userEmail = doc.data().userEmail;
-            images.push({ imageUrl, createdAt, userEmail });
+            const imageId = doc.id;
+            images.push({ imageUrl, createdAt, userEmail, imageId });
           });
           setDocs(images);
           setIsLoading(false);
@@ -36,11 +48,26 @@ const useFirestore = (collectionName: string) => {
       }
     };
     getData();
+
     return () => unsubscribe && unsubscribe();
   }, [collectionName]);
 
+  const deleteADoc = async (imageId: string, imageUser: string) => {
+    const canDelete = user?.email === imageUser;
+    try {
+      if (canDelete) {
+        await deleteDoc(doc(db, collectionName, imageId));
+      } else {
+        console.log("Not the good user");
+      }
+    } catch (error) {
+      console.log("Error : ", error);
+    }
+  };
+
   return {
     docs,
+    deleteADoc,
     isLoading,
   };
 };

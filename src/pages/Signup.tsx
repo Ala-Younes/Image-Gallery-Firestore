@@ -1,4 +1,7 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../firebase/config";
 
@@ -11,19 +14,32 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       navigate("/");
     } catch (error) {
-      const errorMessage = error.message;
-      setError(errorMessage);
+      setError(error.message);
+    }
+  };
+
+  const handleSignin = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <div className="hero min-h-screen bg-base-200 w-full">
         <div className="hero-content flex-col w-full">
           <div className="text-center lg:text-left">
@@ -57,8 +73,13 @@ const SignUp = () => {
                 />
               </div>
               <div className="text-center text-red-500">{error && error}</div>
-              <div className="form-control mt-6">
-                <button className="btn btn-primary">Signup</button>
+              <div className="flex items-center justify-center gap-12 mt-6">
+                <button onClick={handleSignup} className="btn btn-accent">
+                  Signup
+                </button>
+                <button onClick={handleSignin} className="btn btn-secondary">
+                  SignIn
+                </button>
               </div>
             </div>
           </div>

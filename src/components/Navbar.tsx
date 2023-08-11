@@ -10,7 +10,7 @@ const Navbar = () => {
     }
   };
   return (
-    <div className="flex justify-between navbar bg-base-100">
+    <div className="flex justify-between navbar bg-base-200 rounded-lg px-12">
       <a className="font-bold underline normal-case text-xl">GalleryPro📸📸</a>
       <button className="btn" onClick={handleClickLogout}>
         Logout

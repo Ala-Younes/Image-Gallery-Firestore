@@ -7,10 +7,9 @@ import { useAuth } from "./useAuth";
 const useStorage = () => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<Error | null>(null);
-
   const { user } = useAuth();
 
-  const startUpload = (file: File) => {
+  const uploadAndAddToFirestore = (file: File) => {
     if (!file) {
       return;
     }
@@ -33,18 +32,22 @@ const useStorage = () => {
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setProgress(progress);
-
         // Store Data In Firestore
-        await addDoc(collection(db, "images"), {
-          imageUrl: downloadURL,
-          createdAt: new Date(),
-          userEmail: user?.email,
-        });
+        await addImageFirestore(downloadURL);
       }
     );
   };
+
+  async function addImageFirestore(downloadURL: string) {
+    await addDoc(collection(db, "images"), {
+      imageUrl: downloadURL,
+      createdAt: new Date(),
+      userEmail: user?.email,
+    });
+  }
+
   return {
-    startUpload,
+    uploadAndAddToFirestore,
     progress,
     error,
   };
