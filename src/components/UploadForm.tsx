@@ -31,7 +31,14 @@ const UploadForm = () => {
     e.preventDefault();
     if (selectedFile) {
       // Upload Image
-      uploadAndAddToFirestore(selectedFile);
+      uploadAndAddToFirestore(selectedFile)
+        .then(() => {
+          toast.success("Success Uploading File");
+        })
+        .catch((error) => {
+          console.log("Error : ", error);
+          toast.success("Error Uploading File");
+        });
     } else {
       setSelectedFile(null);
     }

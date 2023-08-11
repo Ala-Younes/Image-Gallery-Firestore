@@ -6,6 +6,7 @@ import { useState } from "react";
 import { auth } from "../firebase/config";
 
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -20,9 +21,11 @@ const SignUp = () => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      toast.success("Success Signing Up");
       navigate("/");
     } catch (error) {
       setError(error.message);
+      toast.error("Error Signing Up");
     }
   };
 
@@ -32,9 +35,11 @@ const SignUp = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Success Signing Up");
       navigate("/");
     } catch (error) {
       setError(error.message);
+      toast.error("Error Signing Up");
     }
   };
 

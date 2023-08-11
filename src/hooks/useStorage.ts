@@ -10,7 +10,7 @@ const useStorage = () => {
   const [error, setError] = useState<Error | null>(null);
   const { user } = useAuth();
 
-  const uploadAndAddToFirestore = (file: File) => {
+  const uploadAndAddToFirestore = async (file: File) => {
     if (!file) {
       return;
     }
@@ -20,8 +20,8 @@ const useStorage = () => {
       storage,
       `images/${fileId}.${ImageUtils.getImageExtension(file)}`
     );
-    const uploadTask = uploadBytesResumable(storageRef, file);
 
+    const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",
       (snapshot) => {

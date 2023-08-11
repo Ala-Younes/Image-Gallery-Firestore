@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import useFirestore from "../hooks/useFirestore";
 import { MdDeleteForever } from "react-icons/md";
 import Modal from "./common/Modal";
+import { toast } from "react-hot-toast";
 
 const ImageGallery = () => {
   const { docs: images, isLoading, deleteADoc } = useFirestore("images");
@@ -15,7 +16,13 @@ const ImageGallery = () => {
   };
 
   const handleDelete = async (imageId: string, imageUser: string) => {
-    await deleteADoc(imageId, imageUser);
+    await deleteADoc(imageId, imageUser)
+      .then(() => {
+        toast.success("Success Deleting Image");
+      })
+      .catch(() => {
+        toast.error("Error Deleting Image");
+      });
     setIsModalOpen(false);
   };
 
