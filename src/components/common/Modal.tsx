@@ -31,7 +31,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, title }) => {
                     Please confirm your action
                   </p>
                 </div>
-                {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b gap-6">
                   <button
                     className="btn btn-outline"

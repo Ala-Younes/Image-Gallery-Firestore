@@ -1,5 +1,7 @@
 import { useState } from "react";
 import useStorage from "../hooks/useStorage";
+import ImageUtils from "../utils/imagesUtilities";
+import { toast } from "react-hot-toast";
 
 const UploadForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -14,12 +16,13 @@ const UploadForm = () => {
     }
 
     const targetFile = files[0];
-    const fileType = targetFile?.type.split("/")[1];
+    const fileType = ImageUtils.getImageExtension(targetFile);
 
-    if (fileType?.includes("jpeg")) {
+    if (fileType !== null && ImageUtils.isImageExtensionSupported(fileType)) {
       setSelectedFile(targetFile);
       setSelectedSrc(URL.createObjectURL(targetFile));
     } else {
+      toast.error("File Type not supported");
       console.error("File Type not supported");
     }
   };

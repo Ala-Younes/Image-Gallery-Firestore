@@ -3,6 +3,7 @@ import { useState } from "react";
 import { db, storage } from "../firebase/config";
 import { addDoc, collection } from "firebase/firestore";
 import { useAuth } from "./useAuth";
+import ImageUtils from "../utils/imagesUtilities";
 
 const useStorage = () => {
   const [progress, setProgress] = useState(0);
@@ -14,9 +15,11 @@ const useStorage = () => {
       return;
     }
     const fileId = crypto.randomUUID();
-    const formatFile = file.type.split("/")[1];
 
-    const storageRef = ref(storage, `images/${fileId}.${formatFile}`);
+    const storageRef = ref(
+      storage,
+      `images/${fileId}.${ImageUtils.getImageExtension(file)}`
+    );
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(

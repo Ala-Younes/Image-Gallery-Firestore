@@ -5,29 +5,33 @@ import SignUp from "./pages/Signup";
 import { AuthProvider } from "./context/auth";
 import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
+import { ToastProvider } from "./providers/toast-provider";
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <PublicRoute>
-              <SignUp />
-            </PublicRoute>
-          }
-        />
-      </Routes>
-    </AuthProvider>
+    <>
+      <ToastProvider />
+      <AuthProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <SignUp />
+              </PublicRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </>
   );
 }
 
